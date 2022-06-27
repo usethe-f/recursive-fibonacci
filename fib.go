@@ -6,11 +6,11 @@ import (
 )
 
 // Create a variable to represent the max Fibonacci index
-var maxIndex uint = 29
+var maxIndex uint64 = 29
 
 // Create a mechanism to set maxIndex
-func setMaxIndex(newValue uint) {
-	err := validateUint(newValue)
+func setMaxIndex(newValue uint64) {
+	err := validateUint64(newValue)
 	if err != nil {
 		return
 	}
@@ -18,40 +18,40 @@ func setMaxIndex(newValue uint) {
 }
 
 // Create a buffer to hold Fibonacci numbers sequentially
-var seq = []uint{1} // 1 is the base number
+var seq = []uint64{1} // 1 is the base number
 
 // Create a cache to hold fibonacci numbers that have been seen before
 // so that recursion doesn't cause extra complexity
-var cache = make(map[uint]uint)
+var cache = make(map[uint64]uint64)
 
 // Ensure unsigned integer
-func validateUint(check uint) error {
+func validateUint64(check uint64) error {
 	var chk interface{}
 	chk = check
 	switch chk.(type) {
-	case uint:
+	case uint64:
 		return nil
 	default:
-		return errors.New(fmt.Sprintf("expected unsigned uinteger, got %T", check))
+		return errors.New(fmt.Sprintf("expected uint64, got %T", check))
 	}
 }
 
-// Run the Fibonacci recursor and return a function that returns a string of uint
+// Run the Fibonacci recursor and return a function that returns a string of uint64
 // that represents the Fibonacci sequence to the {maxIndex}th index
-func fib() func() ([]uint, error) {
+func fib() func() ([]uint64, error) {
 	// TODO: refactor to allow for negative Fibonacci sequences
-	err := validateUint(maxIndex)
+	err := validateUint64(maxIndex)
 
 	if err == nil {
 		fibRecursor(maxIndex)
 	}
 
-	return func() ([]uint, error) { return seq, nil }
+	return func() ([]uint64, error) { return seq, nil }
 }
 
 // fibRecursor returns a single Fibonacci number recursively, while
-// adding each uintermediary number to a buffer
-func fibRecursor(num uint) uint {
+// adding each intermediary number to a buffer
+func fibRecursor(num uint64) uint64 {
 	// If the recursion reaches full depth, return the number
 	if num <= 1 {
 		return num
@@ -62,7 +62,7 @@ func fibRecursor(num uint) uint {
 		return res
 	}
 
-	var newNum uint = 0
+	var newNum uint64 = 0
 
 	// If there is a cache miss, calculate the value, cache it, and add it to the buffer
 	newNum = fibRecursor(num-1) + fibRecursor(num-2)
@@ -104,11 +104,13 @@ func main() {
 //
 // Now, I had a pretty nice way to tell me what the /last/ number in the Fibonacci sequence was.
 // However, the requirements state that I must /expand/ the sequence up to n, not calculate
-// the final number. I employed a buffer in the form of a slice of uint to solve this. For every
+// the final number. I employed a buffer in the form of a slice of uint64 to solve this. For every
 // cache miss, a new number is pushed to the buffer. At the end of recursion, a function is
 // returned that returns the buffer.
 //
-// The last change that I made was to change all of the int datatypes to uint and catch negs.
+// The last change that I made was to change all of the int datatypes to uint64 and catch negs.
 // Since the logic driving this calculator would have to be altered to return negative Fibonacci
 // sequences, this is a modicum of protection. The real solution would be to refactor the code
 // to gracefully handle negative Fibonacci sequences, but that was not a requirement.
+//
+// Finally, to make sure everything was wired properly, I wrote tests.

@@ -7,53 +7,53 @@ import (
 	"testing"
 )
 
-// Read the Fibonacci sequence to the 93rd index and return it as []uint
-func populateFib(t *testing.T) ([93]uint, error) {
+// Read the Fibonacci sequence to the 93rd index and return it as []uint64
+func populateFib(t *testing.T) ([93]uint64, error) {
 	fibFile, err := os.Open("fib.csv")
 	if err != nil {
-		return [93]uint{}, err
+		return [93]uint64{}, err
 	}
 
 	reader := csv.NewReader(fibFile)
 
 	fibSequence, err := reader.ReadAll()
 	if err != nil {
-		return [93]uint{}, err
+		return [93]uint64{}, err
 	}
 
-	uintFibSequence := [93]uint{}
+	uint64FibSequence := [93]uint64{}
 
 	for i := 0; i < len(fibSequence); i++ {
 		fibNum, err := strconv.Atoi(fibSequence[0][i])
 		if err != nil {
 			t.Log(err)
-			return [93]uint{}, err
+			return [93]uint64{}, err
 		}
 
-		uintFibSequence[i] = uint(fibNum)
+		uint64FibSequence[i] = uint64(fibNum)
 	}
 	err = fibFile.Close()
 	if err != nil {
-		return [93]uint{}, err
+		return [93]uint64{}, err
 	}
-	return uintFibSequence, nil
+	return uint64FibSequence, nil
 }
 
 ////////////////////////
 // test cases         //
 ////////////////////////
 
-// Fail if the length of the []uint returned by fib() with
+// Fail if the length of the []uint64 returned by fib() with
 // a maxIndex of i is different than that of Fibonacci[i]
-func checkLen(t *testing.T, master *[93]uint, i int) error {
+func checkLen(t *testing.T, master *[93]uint64, i int) error {
 	if i == 0 {
 		return nil
 	}
-	setMaxIndex(uint(i))
+	setMaxIndex(uint64(i))
 	f := fib()
 	fibSlice, err := f()
-	got := uint(fibSlice[i])
-	want := uint(0)
+	got := uint64(fibSlice[i])
+	want := uint64(0)
 
 	if err != nil {
 		t.Log(err)
@@ -67,18 +67,18 @@ func checkLen(t *testing.T, master *[93]uint, i int) error {
 	return nil
 }
 
-// Fail if the last index of the []uint returned by fib() with
+// Fail if the last index of the []uint64 returned by fib() with
 // a maxIndex of i is not equal to Fibonacci[i]
-func checkLastNum(t *testing.T, master *[93]uint, i int) error {
+func checkLastNum(t *testing.T, master *[93]uint64, i int) error {
 	if i == 0 {
 		return nil
 	}
 
-	setMaxIndex(uint(i))
+	setMaxIndex(uint64(i))
 	f := fib()
 	fibSlice, err := f()
-	var got uint = master[i-1]
-	var want uint = fibSlice[i-1]
+	var got uint64 = master[i-1]
+	var want uint64 = fibSlice[i-1]
 
 	if err != nil {
 		t.Log(err)
@@ -101,7 +101,7 @@ func TestFib(t *testing.T) {
 		t.FailNow()
 	}
 
-	tests := []func(t *testing.T, seq *[93]uint, i int) error{
+	tests := []func(t *testing.T, seq *[93]uint64, i int) error{
 		checkLen,
 		checkLastNum,
 	}

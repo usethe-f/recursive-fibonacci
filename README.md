@@ -1,4 +1,4 @@
-#Rationale and problem-solving
+# Rationale and problem-solving
 
 As this was meant to be a whiteboardish assessment, I would like to use this
 section to walk you through the process that I used.
